@@ -1,0 +1,27 @@
+{
+  "name": "imagegridwithvanilajs",
+  "version": "1.0.0",
+  "description": "A Vanila JS project for showing a simple Image grid",
+  "main": "script.js",
+  "scripts": {
+    "start": "webpack-dev-server --mode development --open"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ssinghal1989/ImageGridWithVanilaJS.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ssinghal1989/ImageGridWithVanilaJS/issues"
+  },
+  "homepage": "https://github.com/ssinghal1989/ImageGridWithVanilaJS#readme",
+  "dependencies": {
+    "css-loader": "^4.2.2",
+    "script-loader": "^0.7.2",
+    "style-loader": "^1.2.1",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
+  }
+}

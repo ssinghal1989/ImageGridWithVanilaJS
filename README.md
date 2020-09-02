@@ -1,7 +1,7 @@
 # ImageGridWithVanilaJS
 ## A Responsive Vanila JS WebApp for image grid
 
-It's a simple responsive web app written in Vanila JS to search and show an Image grid.
+It's a simple responsive web app written in Vanila JS to search and show Images in a grid.
 
 > Steps to run the application:-
 ```

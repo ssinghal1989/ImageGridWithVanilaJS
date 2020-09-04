@@ -6,6 +6,7 @@ class Modal extends HTMLElement {
     this.attachShadow({ mode: "open" });
     this.shadowRoot.innerHTML = `
             <style>
+            @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css");
                 #backdrop {
                     position: fixed;
                     top: 0;
@@ -29,10 +30,10 @@ class Modal extends HTMLElement {
                 }
                 @media only screen and (max-width: 600px) {
                     #modal {
-                        top: 2vh;
-                        left: 1%;
-                        width: 98%;
-                        height: 96vh;
+                        top: 4vh;
+                        left: 3%;
+                        width: 94%;
+                        height: 92vh;
                     }
                 }
                 @media only screen and (min-width: 601px) {
@@ -64,8 +65,8 @@ class Modal extends HTMLElement {
                 }
 
                 #main {
-                    padding: 1rem;
-                    height: 80%;
+                    height: 100%;
+                    position: relative;
                 }
 
                 #actions {
@@ -77,22 +78,38 @@ class Modal extends HTMLElement {
                 #actions button {
                     margin: 0 0.25rem;
                 }
+                i {
+                    position: absolute;
+                    top: -14px;
+                    right: -10px;
+                    font-size: 28px;
+                    color: white;
+                    cursor: pointer;
+                }
             </style>
             <div id="backdrop"></div>
             <div id="modal">
+                
                 <section id="main">
+                    <i class="fa fa-times-circle"></i>
                     <slot></slot>
-                </section>
-                <section id="actions">
-                    <button id="close">Close</button>
                 </section>
             </div>
         `;
 
-    const cancelButton = this.shadowRoot.querySelector("#close");
+    const cancelButton = this.shadowRoot.querySelector("i");
     cancelButton.addEventListener("click", (e) => {
       this.close();
     });
+  }
+
+  connectedCallback() {
+    window.document.onkeydown = (event) => {
+      event = event || window.event;
+      if (event.keyCode == 27) {
+        this.close();
+      }
+    };
   }
 
   // Public methods those can be accessed from parent component

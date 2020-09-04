@@ -17,7 +17,7 @@ class ImageGrid extends HTMLElement {
                 grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             }
 
-            #image-container {
+            .image-container {
               height: 10rem;
               position: relative;
             }
@@ -50,57 +50,67 @@ class ImageGrid extends HTMLElement {
               bottom: calc(50% - 16px);
               display: none;
             }
-            #image-container:hover #zoom-in-icon {
+            .image-container:hover #zoom-in-icon {
               display: block;
             }
         </style>`;
-    
   }
 
   // Method called when element is connected with DOM
   async connectedCallback() {
-    if (this.hasAttribute("images")) {
-      const LIKED_IMAGES_KEY = 'LIKED_IMAGES';
-      const likedImages = await localStorage.getItem(LIKED_IMAGES_KEY);
-      this.images = JSON.parse(this.getAttribute("images"));
-      this._gridContainer = document.createElement("div");
-      this._gridContainer.setAttribute("id", "image-grid");
-      this.images.forEach((imageData) => {
-        const imageContainer = document.createElement("div");
-        imageContainer.setAttribute('id', 'image-container');
-        
-        // Like Icon starts 
-        const likeIcon = document.createElement("i");
-        likeIcon.classList.add("fa");
-        likeIcon.classList.add("fa-thumbs-up");
-        likeIcon.setAttribute('id', 'like-icon');
-        likeIcon.addEventListener("click", (e) => this.onLikeButtonClick(e, imageData));
-        if (likedImages && likedImages.indexOf(imageData.id) !== -1) {
-          likeIcon.classList.add('liked');
-        }
-        imageContainer.appendChild(likeIcon);
-        // Like Icon ends
+    this._gridContainer = document.createElement("div");
+    this._gridContainer.setAttribute("id", "image-grid");
+    this.shadowRoot.appendChild(this._gridContainer);
+  }
 
-        // Zoom in icon start
-        const zoomInIcon = document.createElement('i');
-        zoomInIcon.classList.add("fa");
-        zoomInIcon.classList.add("fa-search-plus");
-        zoomInIcon.setAttribute('id', 'zoom-in-icon')
-        zoomInIcon.addEventListener("click", (e) => this.onImageClick(e, imageData));
-        imageContainer.appendChild(zoomInIcon);
-        // Zoom in icon ends
+  // Method for adding images in image grid
+  async addImages(imageArray) {
+    const LIKED_IMAGES_KEY = "LIKED_IMAGES";
+    const likedImages = await localStorage.getItem(LIKED_IMAGES_KEY);
+    imageArray = JSON.parse(imageArray);
 
-        // Image element start
-        const imageElement = document.createElement("img");
-        imageElement.setAttribute("src", imageData.urls.regular);
-        imageElement.setAttribute("image-data", imageData);
-        imageContainer.appendChild(imageElement);
-        this._gridContainer.appendChild(imageContainer);
-        // Image element ends
+    imageArray.forEach((imageData) => {
+      const imageContainer = document.createElement("div");
+      imageContainer.setAttribute("class", "image-container");
 
-        this.shadowRoot.appendChild(this._gridContainer);
-      });
-    }
+      // Like Icon starts
+      const likeIcon = document.createElement("i");
+      likeIcon.classList.add("fa");
+      likeIcon.classList.add("fa-thumbs-up");
+      likeIcon.setAttribute("id", "like-icon");
+      likeIcon.addEventListener("click", (e) =>
+        this.onLikeButtonClick(e, imageData)
+      );
+      if (likedImages && likedImages.indexOf(imageData.id) !== -1) {
+        likeIcon.classList.add("liked");
+      }
+      imageContainer.appendChild(likeIcon);
+      // Like Icon ends
+
+      // Zoom in icon start
+      const zoomInIcon = document.createElement("i");
+      zoomInIcon.classList.add("fa");
+      zoomInIcon.classList.add("fa-search-plus");
+      zoomInIcon.setAttribute("id", "zoom-in-icon");
+      zoomInIcon.addEventListener("click", (e) =>
+        this.onImageClick(e, imageData)
+      );
+      imageContainer.appendChild(zoomInIcon);
+      // Zoom in icon ends
+
+      // Image element start
+      const imageElement = document.createElement("img");
+      imageElement.setAttribute("src", imageData.urls.regular);
+      imageElement.setAttribute("image-data", imageData);
+      imageContainer.appendChild(imageElement);
+      this._gridContainer.appendChild(imageContainer);
+      // Image element ends
+    });
+  }
+
+  // Method for clearing the grid
+  clearGrid() {
+    this.shadowRoot.getElementById('image-grid').innerHTML = '';
   }
 
   // Method to handle click event on zoom icon
@@ -112,20 +122,20 @@ class ImageGrid extends HTMLElement {
 
   // Method to handle like button click
   async onLikeButtonClick(event, imageData) {
-    const LIKED_IMAGES_KEY = 'LIKED_IMAGES';
+    const LIKED_IMAGES_KEY = "LIKED_IMAGES";
     const targetElement = event.target;
     let likedImages = await localStorage.getItem(LIKED_IMAGES_KEY);
     if (!likedImages) {
-      targetElement.classList.add('liked');
+      targetElement.classList.add("liked");
       likedImages = imageData.id;
       localStorage.setItem(LIKED_IMAGES_KEY, likedImages);
-    } else if(likedImages.indexOf(imageData.id) !== -1) {
-      targetElement.classList.remove('liked');
-      likedImages = likedImages.replace(imageData.id, '');
-      likedImages = likedImages.toString().replace(',,', ',');
+    } else if (likedImages.indexOf(imageData.id) !== -1) {
+      targetElement.classList.remove("liked");
+      likedImages = likedImages.replace(imageData.id, "");
+      likedImages = likedImages.toString().replace(",,", ",");
       localStorage.setItem(LIKED_IMAGES_KEY, likedImages);
     } else {
-      targetElement.classList.add('liked');
+      targetElement.classList.add("liked");
       likedImages = `${likedImages},${imageData.id}`;
       localStorage.setItem(LIKED_IMAGES_KEY, likedImages);
     }
